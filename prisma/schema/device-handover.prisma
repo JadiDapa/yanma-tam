@@ -1,0 +1,13 @@
+model DeviceHandover {
+    id               Int               @id @default(autoincrement())
+    handoverId       Int
+    handover         Handover          @relation(fields: [handoverId], references: [id])
+    deviceSlug       String
+    device           Device            @relation(fields: [deviceSlug], references: [slug])
+    floorInspections FloorInspection[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([handoverId, deviceSlug])
+}

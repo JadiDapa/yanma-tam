@@ -1,0 +1,15 @@
+model FloorDeviceConfig {
+    id          Int    @id @default(autoincrement())
+    floorSlug   String
+    deviceSlug  String
+    title       String
+    description String
+
+    floor  Floor  @relation(fields: [floorSlug], references: [slug], onDelete: Cascade)
+    device Device @relation(fields: [deviceSlug], references: [slug], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([floorSlug, deviceSlug])
+}

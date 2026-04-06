@@ -1,0 +1,15 @@
+model MonthlyDocumentation {
+    id         Int                 @id @default(autoincrement())
+    deviceSlug String
+    device     Device              @relation(fields: [deviceSlug], references: [slug], onDelete: Cascade)
+    floorSlug  String
+    floor      Floor               @relation(fields: [floorSlug], references: [slug], onDelete: Cascade)
+    periodSlug String
+    period     DocumentationPeriod @relation(fields: [periodSlug], references: [slug], onDelete: Cascade)
+    createdBy  String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    images DocumentationImage[]
+}

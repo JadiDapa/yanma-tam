@@ -1,0 +1,19 @@
+model Service {
+    id     Int           @id @default(autoincrement())
+    month  Int
+    year   Int
+    date   DateTime
+    status ServiceStatus @default(DRAFT)
+
+    serviceDevices ServiceDevice[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([month, year])
+}
+
+enum ServiceStatus {
+    DRAFT
+    FINALIZED
+}

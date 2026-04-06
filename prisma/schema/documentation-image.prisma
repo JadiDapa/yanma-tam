@@ -1,0 +1,14 @@
+model DocumentationImage {
+    id Int @id @default(autoincrement())
+
+    fileUrl     String
+    fileName    String?
+    caption     String?
+    description String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    documentationId Int
+    documentation   MonthlyDocumentation @relation(fields: [documentationId], references: [id])
+}

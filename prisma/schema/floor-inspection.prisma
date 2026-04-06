@@ -1,0 +1,19 @@
+model FloorInspection {
+    id           Int      @id @default(autoincrement())
+    date         DateTime
+    timeStart    String
+    timeEnd      String
+    supervisorId Int
+    supervisor   User     @relation(fields: [supervisorId], references: [id])
+
+    deviceHandoverId Int
+    deviceHandover   DeviceHandover @relation(fields: [deviceHandoverId], references: [id])
+
+    floorId Int
+    floor   Floor @relation(fields: [floorId], references: [id])
+
+    inspectionItems InspectionItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

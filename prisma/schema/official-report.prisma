@@ -1,0 +1,9 @@
+model OfficialReport {
+    id        Int      @id @default(autoincrement())
+    month     String
+    year      String
+    floor     Floor    @relation(fields: [floorSlug], references: [slug])
+    floorSlug String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

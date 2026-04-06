@@ -1,0 +1,12 @@
+model AttendanceEntry {
+    id               Int            @id @default(autoincrement())
+    attendanceListId Int
+    attendanceList   AttendanceList @relation(fields: [attendanceListId], references: [id], onDelete: Cascade)
+    date             DateTime
+    checkIn          String?
+    checkOut         String?
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+
+    @@unique([attendanceListId, date])
+}

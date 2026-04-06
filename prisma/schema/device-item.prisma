@@ -1,0 +1,16 @@
+model DeviceItem {
+    id        BigInt   @id @default(autoincrement())
+    slug      String   @unique
+    name      String
+    type      String
+    qty       Int
+    unit      String
+    price     Decimal
+    detail    String
+    serviceDevice   ServiceDevice? @relation(fields: [serviceDeviceId], references: [id])
+    serviceDeviceId BigInt?
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+

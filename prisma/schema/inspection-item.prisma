@@ -1,0 +1,11 @@
+model InspectionItem {
+    id      Int     @id @default(autoincrement())
+    name    String
+    unit    String
+    qty     Int
+    checked Boolean @default(false)
+    notes   String?
+
+    floorInspectionId Int
+    floorInspection   FloorInspection @relation(fields: [floorInspectionId], references: [id])
+}

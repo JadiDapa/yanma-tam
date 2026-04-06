@@ -1,0 +1,11 @@
+model Handover {
+    id             Int              @id @default(autoincrement())
+    month          Int
+    year           Int
+    deviceHandover DeviceHandover[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([month, year])
+}
