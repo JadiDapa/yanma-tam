@@ -22,12 +22,12 @@ export async function uploadDocumentationImage(formData: FormData) {
 
   const ext = file.name.split(".").pop() ?? "jpg";
   const fileName = `${randomUUID()}.${ext}`;
-  const uploadDir = join(process.cwd(), "public", "uploads", "documentation");
+  const uploadDir = join(process.cwd(), "uploads", "documentation");
 
   await mkdir(uploadDir, { recursive: true });
   await writeFile(join(uploadDir, fileName), buffer);
 
-  const fileUrl = `/uploads/documentation/${fileName}`;
+  const fileUrl = `/api/uploads/documentation/${fileName}`;
 
   // ── Find or create MonthlyDocumentation ────────────────────────────────
   let documentation = await prisma.monthlyDocumentation.findFirst({
