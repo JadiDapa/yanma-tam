@@ -10,10 +10,11 @@ import { FloorDeviceConfigService } from "@/server/services/floor-device-config.
 export async function POST(req: NextRequest) {
   const { deviceSlug, periodSlug, templatePath } = await req.json();
 
-  const relativeTemplate = templatePath.startsWith("/")
-    ? templatePath.slice(1)
-    : templatePath;
-  const absoluteTemplatePath = join(process.cwd(), "public", relativeTemplate);
+  const relativeTemplate = templatePath
+    .replace(/^\/api\//, "") // ← strip /api/ prefix
+    .replace(/^\//, "");
+
+  const absoluteTemplatePath = join(process.cwd(), relativeTemplate); // ← no "public"
 
   const [floors, configs] = await Promise.all([
     FloorService.getFloorDocumentation(deviceSlug, periodSlug),
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
   const buffer = await generateDocumentationDocument(
     absoluteTemplatePath,
     data,
-    join(process.cwd(), "public"),
+    join(process.cwd()), // ← no "public"
   );
 
   return new NextResponse(buffer, {

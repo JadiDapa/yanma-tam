@@ -85,7 +85,9 @@ export async function generateDocumentationDocument(
             ? Buffer.from(await res.arrayBuffer())
             : TRANSPARENT_PNG_1x1;
         } else {
-          const relative = value.startsWith("/") ? value.slice(1) : value;
+          const relative = value
+            .replace(/^\/api\//, "") // add this line
+            .replace(/^\//, "");
           const fullPath = join(basePublicPath, relative);
           buf = existsSync(fullPath)
             ? readFileSync(fullPath)

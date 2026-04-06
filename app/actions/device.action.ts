@@ -59,12 +59,12 @@ export async function uploadDeviceTemplate(formData: FormData) {
   const buffer = Buffer.from(bytes);
 
   const fileName = `${deviceSlug}-template.docx`;
-  const uploadDir = join(process.cwd(), "public", "uploads", "templates");
+  const uploadDir = join(process.cwd(), "uploads", "templates"); // ← removed public
 
   await mkdir(uploadDir, { recursive: true });
   await writeFile(join(uploadDir, fileName), buffer);
 
-  const templatePath = `/uploads/templates/${fileName}`;
+  const templatePath = `/api/uploads/templates/${fileName}`; // ← api prefix
 
   await DeviceService.update(deviceSlug, { template: templatePath });
 
@@ -89,12 +89,12 @@ export async function uploadDeviceHandoverTemplate(formData: FormData) {
   const buffer = Buffer.from(bytes);
 
   const fileName = `${deviceSlug}-handover-template.docx`;
-  const uploadDir = join(process.cwd(), "public", "uploads", "templates");
+  const uploadDir = join(process.cwd(), "uploads", "templates"); // ← removed public
 
   await mkdir(uploadDir, { recursive: true });
   await writeFile(join(uploadDir, fileName), buffer);
 
-  const templatePath = `/uploads/templates/${fileName}`;
+  const templatePath = `/api/uploads/templates/${fileName}`; // ← api prefix
 
   await DeviceService.update(deviceSlug, { handoverTemplate: templatePath });
 
@@ -108,23 +108,26 @@ export async function generateDocumentationDocx(
   periodSlug: string,
   templatePath: string,
 ) {
-  const relativeTemplate = templatePath.startsWith("/")
-    ? templatePath.slice(1)
-    : templatePath;
-  const absoluteTemplatePath = join(process.cwd(), "public", relativeTemplate);
+  // templatePath is now "/api/uploads/templates/..." — strip the /api prefix
+  const relativeTemplate = templatePath
+    .replace(/^\/api\//, "") // → "uploads/templates/..."
+    .replace(/^\//, "");
+
+  const absoluteTemplatePath = join(process.cwd(), relativeTemplate); // ← no "public"
+
   const [floors, configs] = await Promise.all([
     FloorService.getFloorDocumentation(deviceSlug, periodSlug),
     FloorDeviceConfigService.getByDevice(deviceSlug),
   ]);
 
   const data = buildDocumentationData(floors, configs);
-  console.log("data: ", data);
 
   const buffer = await generateDocumentationDocument(
     absoluteTemplatePath,
     data,
-    join(process.cwd(), "public"),
+    join(process.cwd()), // ← base is now project root, not public
   );
+
   return {
     base64: buffer.toString("base64"),
     filename: `dokumentasi-${deviceSlug}-${periodSlug}.docx`,
