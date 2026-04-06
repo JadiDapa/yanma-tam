@@ -126,7 +126,6 @@ export default function HandoverDetailForm({
             ? "Laporan berhasil diperbarui"
             : "Laporan berhasil dibuat",
         );
-        router.push("/deviceHandover");
       } catch (err: any) {
         toast.error(err?.message ?? "Gagal menyimpan laporan");
       }

@@ -20,7 +20,7 @@ export default async function DocumentationHandoverPage({
           subtitle=""
         />
       </div>
-      <div className="grid grid-cols-5 w-full gap-6">
+      <div className="grid grid-cols-3 w-full gap-6">
         {devices.items.map((device) => (
           <DeviceCard key={device.id} device={device} handoverId={id} />
         ))}

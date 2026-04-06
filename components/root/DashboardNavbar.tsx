@@ -48,7 +48,7 @@ export default async function Navbar({ user }: { user: User }) {
             href={`/users/${user.nip}`}
             className="flex flex-col cursor-pointer leading-tight min-w-24"
           >
-            <span className="font-medium">{user?.fullName || "User"}</span>
+            <span className="font-medium">{user?.name || "User"}</span>
             <span className="text-sm text-gray-500">{user?.role}</span>
           </Link>
         </div>

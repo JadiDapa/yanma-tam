@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { clerkClient } from "@clerk/nextjs/server";
 import { Prisma, UserRole } from "@/generated/prisma";
 import type {
   CreateUserDTO,
@@ -87,31 +86,15 @@ export const UserService = {
   },
 
   async create(data: CreateUserDTO) {
-    const exists = await prisma.user.findUnique({
-      where: { username: data.username },
+    return await prisma.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        nip: data.nip,
+        role: data.role,
+        name: data.name,
+      },
     });
-    if (exists) throw new Error("Username already exists");
-
-    const client = await clerkClient();
-
-    const clerkUser = await client.users.createUser({
-      username: data.username,
-      password: data.password,
-    });
-
-    try {
-      return await prisma.user.create({
-        data: {
-          username: data.username,
-          email: data.email,
-          role: data.role,
-          name: data.name,
-        },
-      });
-    } catch (err) {
-      await client.users.deleteUser(clerkUser.id);
-      throw err;
-    }
   },
 
   async update(id: number, data: UpdateUserDTO) {

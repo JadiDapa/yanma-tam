@@ -31,7 +31,8 @@ export async function saveHandover(
   } else {
     await DeviceHandoverService.createWithFloors(payload);
   }
-  revalidatePath("/deviceHandover");
+  revalidatePath("/handover");
+  revalidatePath(`/handover/${payload.handoverId}/${payload.deviceSlug}`);
 }
 
 export async function createHandover(
@@ -41,7 +42,7 @@ export async function createHandover(
 
   await HandoverService.create(data);
 
-  revalidatePath("/documentation");
+  revalidatePath("/handover");
 }
 
 export async function updateHandover(
@@ -52,5 +53,5 @@ export async function updateHandover(
 
   await HandoverService.update(userId, { ...data });
 
-  revalidatePath("/documentation");
+  revalidatePath("/handover");
 }

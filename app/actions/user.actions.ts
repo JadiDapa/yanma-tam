@@ -17,9 +17,7 @@ export async function getCurrentUser() {
     redirect("/sign-in");
   }
 
-  const user = await UserService.getByUsername(
-    clerkUser.username.toUpperCase(),
-  );
+  const user = await UserService.getByUsername(clerkUser.username);
 
   if (!user) {
     throw new Error("User not found in database");
@@ -31,10 +29,10 @@ export async function getCurrentUser() {
 export async function createUser(input: z.input<typeof CreateUserSchema>) {
   const data = CreateUserSchema.parse({
     username: input.username,
-    password: input.password,
     role: input.role,
     name: input.name,
-    confirmPassword: input.confirmPassword,
+    email: input.email,
+    nip: input.nip,
   });
 
   await UserService.create(data);

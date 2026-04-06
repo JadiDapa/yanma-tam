@@ -15,10 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import { Plus } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { CreateUserSchema } from "@/server/validators/user.validator";
+import { UpdateUserSchema } from "@/server/validators/user.validator";
 import {
   Select,
   SelectContent,
@@ -27,32 +27,55 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRole } from "@/generated/prisma";
-import { createUser } from "@/app/actions/user.actions";
+import { updateUser } from "@/app/actions/user.actions";
 
-type UserFormType = z.infer<typeof CreateUserSchema>;
+type UpdateUserFormType = z.infer<typeof UpdateUserSchema>;
 
-export default function CreateUserDialog() {
+interface UpdateUserDialogProps {
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    username: string;
+    role: UserRole;
+    nip?: string | null;
+  };
+}
+
+export default function UpdateUserDialog({ user }: UpdateUserDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<UserFormType>({
-    resolver: zodResolver(CreateUserSchema),
+  const form = useForm<UpdateUserFormType>({
+    resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      username: "",
-      role: "GUEST",
-      nip: "",
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      nip: user.nip ?? "",
     },
   });
 
-  async function onSubmit(values: UserFormType) {
+  // Reset to fresh user data each time the dialog opens
+  function handleOpenChange(value: boolean) {
+    if (value) {
+      form.reset({
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        nip: user.nip ?? "",
+      });
+    }
+    setOpen(value);
+  }
+
+  async function onSubmit(values: UpdateUserFormType) {
     startTransition(async () => {
       try {
-        await createUser({
-          ...values,
-        });
-        toast.success("Ticket created!");
+        await updateUser(user.id, values);
+        toast.success("User updated!");
         setOpen(false);
       } catch {
         toast.error("Something went wrong");
@@ -61,26 +84,25 @@ export default function CreateUserDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg  text-sm font-semibold hover:bg-primary active:scale-95 transition-all shadow-sm">
-          <Plus />
-          Tambah Pengguna
+        <Button variant="outline" size="sm" className="gap-1.5">
+          <Pencil className="h-3.5 w-3.5" />
+          Edit
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Tambah User</DialogTitle>
+          <DialogTitle>Edit User</DialogTitle>
           <p className="text-muted-foreground -mt-1 text-sm">
-            Masukkan data user
+            Perbarui data user
           </p>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4">
           <FieldGroup>
             <div className="flex flex-col gap-4">
-              {/* Full Name */}
               <Controller
                 name="name"
                 control={form.control}
@@ -88,7 +110,7 @@ export default function CreateUserDialog() {
                   <Field>
                     <FieldLabel>Full Name</FieldLabel>
                     <InputGroup>
-                      <InputGroupInput {...field} placeholder="Nama Bagian" />
+                      <InputGroupInput {...field} placeholder="Nama Lengkap" />
                     </InputGroup>
                   </Field>
                 )}
@@ -106,6 +128,7 @@ export default function CreateUserDialog() {
                   </Field>
                 )}
               />
+
               <Controller
                 name="email"
                 control={form.control}
@@ -118,6 +141,7 @@ export default function CreateUserDialog() {
                   </Field>
                 )}
               />
+
               <Controller
                 name="nip"
                 control={form.control}
@@ -142,7 +166,7 @@ export default function CreateUserDialog() {
                     <FieldLabel>Role</FieldLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Pilih EOS..." />
+                        <SelectValue placeholder="Pilih role..." />
                       </SelectTrigger>
                       <SelectContent>
                         {Object.values(UserRole).map((u) => (
@@ -167,9 +191,9 @@ export default function CreateUserDialog() {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending || !form.formState.isValid}
+                disabled={isPending || !form.formState.isDirty}
               >
-                {isPending ? <Spinner /> : "Tambahkan"}
+                {isPending ? <Spinner /> : "Simpan Perubahan"}
               </Button>
             </DialogFooter>
           </FieldGroup>

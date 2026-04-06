@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 interface AuthHeaderProps {
   title: string;
   subtitle: string;
@@ -9,16 +7,9 @@ export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
   return (
     <div className="">
       <div className="">
-        <figure className="relative mx-auto w-52 h-24">
-          <Image
-            src={"https://hapindo.co.id/images/clients/client-2.png"}
-            fill
-            className="object-contain object-center"
-            alt=""
-          />
-        </figure>
-        <div className="text-primary flex items-center justify-center gap-4 text-center text-4xl font-semibold tracking-wide">
-          <p>Selamat Datang!</p>
+        <div className="flex items-center flex-col justify-center text-center">
+          <p className="text-4xl font-semibold tracking-wide">YANMA</p>
+          <p className="text-lg">Taruna Anugerah Mandiri</p>
         </div>
       </div>
 

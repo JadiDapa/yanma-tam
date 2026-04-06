@@ -90,11 +90,10 @@ export default function FloorColumn({ floor, deviceSlug, periodSlug }: Props) {
                 key={img.id}
                 className="relative shrink-0 size-40 rounded-lg overflow-hidden border bg-muted group"
               >
-                <Image
+                <img
                   src={img.fileUrl}
                   alt={img.fileName ?? ""}
-                  fill
-                  className="object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
 
                 {/* Delete button */}

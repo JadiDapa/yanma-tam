@@ -69,17 +69,6 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           <p className="text-sm text-muted-foreground">{year}</p>
         </div>
 
-        {/* Date + Device count */}
-        <div className="flex flex-col gap-1 text-xs text-muted-foreground">
-          <span>{formattedDate}</span>
-          <span>
-            <span className="font-semibold text-foreground tabular-nums">
-              {deviceCount}
-            </span>{" "}
-            perangkat
-          </span>
-        </div>
-
         {/* Status badge */}
         <div className="mt-auto pt-1">
           <span

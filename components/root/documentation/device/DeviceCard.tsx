@@ -17,7 +17,7 @@ export default function DeviceCard({
       <div className="relative overflow-hidden rounded-xl border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/40">
         {/* Order badge — top left corner */}
         <div className="absolute top-0 left-0 bg-primary text-primary-foreground text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-br-lg">
-          #{String(device.order).padStart(2, "0")}
+          #{String(device.order + 1).padStart(2, "0")}
         </div>
 
         {/* Arrow link indicator — top right */}

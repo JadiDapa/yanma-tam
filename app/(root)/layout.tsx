@@ -8,13 +8,13 @@ type Props = {
   children: ReactNode;
 };
 export default async function DashboardLayout({ children }: Props) {
-  // const user = await getCurrentUser();
+  const user = await getCurrentUser();
 
   return (
     <SidebarProvider>
-      <DashboardSidebar user={{}} />
+      <DashboardSidebar user={user} />
       <main className="bg-background flex min-h-screen w-full flex-col gap-2 overflow-hidden py-2 pe-2">
-        <DashboardNavbar user={{}} />
+        <DashboardNavbar user={user} />
         {children}
       </main>
     </SidebarProvider>

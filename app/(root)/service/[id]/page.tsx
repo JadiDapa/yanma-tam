@@ -1,30 +1,28 @@
-import AttendanceDetailForm from "@/components/root/attendance/AttendanceDetailForm";
-import { AttendanceListService } from "@/server/services/attendance-list.service";
-import { UserService } from "@/server/services/user.service";
-import { notFound } from "next/navigation";
+import PageHeader from "@/components/root/PageHeader";
+import { ServiceService } from "@/server/services/service.service";
 
-export default async function AttendanceDetailPage({
+export default async function ServicePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const id = Number((await params).id);
+  const { id } = await params;
 
-  const [attendance, eosList, supervisorList] = await Promise.all([
-    AttendanceListService.getById(id),
-    UserService.getByRole("EOS"),
-    UserService.getByRole("SUPERVISOR"),
-  ]);
-
-  if (!attendance) notFound();
+  const service = await ServiceService.getById(Number(id));
 
   return (
     <main className="bg-card w-full md:rounded-2xl lg:p-6 p-4 min-h-screen border space-y-8">
-      <AttendanceDetailForm
-        attendance={attendance}
-        eosList={eosList}
-        supervisorList={supervisorList}
-      />
+      {/* PAGE HEADER */}
+      <div className="flex flex-col lg:flex-row justify-between items-center">
+        <PageHeader
+          title={`Checklist Daftar Layanan YANMA ${service?.year} - ${service?.month}`}
+          subtitle="Checklist Daftar Layanan YANMA"
+        />
+      </div>
+
+      <div className="grid text-3xl font-semibold place-items-center">
+        Work On Progress...
+      </div>
     </main>
   );
 }

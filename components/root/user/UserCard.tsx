@@ -6,6 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import UpdateUserDialog from "./UpdateUserDialog";
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -166,9 +167,12 @@ export function UserCard({ user }: { user: User }) {
         <span className="rounded-md bg-muted px-2.5 py-1 font-mono text-[10px] text-muted-foreground/50">
           ID #{String(user.id).padStart(4, "0")}
         </span>
-        <span className="font-mono text-[10px] text-muted-foreground/50">
-          Joined {formatDate(user.createdAt)}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[10px] text-muted-foreground/50">
+            Joined {formatDate(user.createdAt)}
+          </span>
+          <UpdateUserDialog user={user} />
+        </div>
       </CardFooter>
     </Card>
   );
