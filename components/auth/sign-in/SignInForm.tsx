@@ -36,25 +36,33 @@ export default function SignInForm() {
     defaultValues: { username: "", password: "" },
   });
 
-  function onSubmit(values: LoginFormType) {
+  async function onSubmit(values: LoginFormType) {
     startTransition(async () => {
       if (!loaded) return;
+
       try {
-        const result = await signIn.create({
-          identifier: values.username,
+        const { error } = await signIn.password({
+          identifier: values.username, // atau emailAddress kalau pakai email
           password: values.password,
         });
 
-        if (result.status === "complete" && result.createdSessionId) {
-          await setActive({ session: result.createdSessionId });
-          toast.success("Berhasil Masuk!");
-          router.push("/");
-        } else {
-          toast.error("Kombinasi Email dan Password Salah!");
+        if (error) {
+          toast.error("Kombinasi salah");
+          console.error(error);
+          return;
         }
-      } catch (error) {
-        console.error("Login error:", error);
-        toast.error("Kombinasi Email dan Password Salah!");
+
+        if (signIn.status === "complete") {
+          await signIn.finalize({
+            navigate: ({ session, decorateUrl }) => {
+              const url = decorateUrl("/");
+              router.push(url);
+            },
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Login gagal");
       }
     });
   }
@@ -75,7 +83,7 @@ export default function SignInForm() {
                   <InputGroupInput
                     {...field}
                     className="ml-2"
-                    placeholder="Email"
+                    placeholder="Username"
                     autoComplete="off"
                   />
                   <InputGroupAddon>
